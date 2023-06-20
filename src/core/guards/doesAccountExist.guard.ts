@@ -13,7 +13,6 @@ export class DoesAccountExistEmail implements CanActivate {
     }
 
     async validateRequest(request) {
-        console.log(this.accountService)
         const accountExists = await this.accountService.findOneByEmail(request.body.email);
         if (accountExists) {
             throw new ForbiddenException('This email already exists');
@@ -34,7 +33,6 @@ export class DoesAccountExistId implements CanActivate {
     }
 
     async validateRequest(request) {
-        console.log(this.accountService)
         const accountExists = await this.accountService.findOneById(request.body.accountId);
         if (!accountExists) {
             throw new ForbiddenException('The accountId doesn\'t exist');

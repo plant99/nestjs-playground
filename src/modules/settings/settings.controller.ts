@@ -3,6 +3,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { SettingsService } from './settings.service';
 import { Setting as SettingEntity } from './settings.entity';
 import { SettingDto } from './dto/setting.dto';
+import { DoesAccountExistId } from 'src/core/guards/doesAccountExist.guard';
 @Controller('settings')
 export class SettingsController {
     constructor(private readonly settingService: SettingsService) {}
@@ -24,12 +25,14 @@ export class SettingsController {
     }
 
     @UseGuards(AuthGuard('jwt'))
+    @UseGuards(DoesAccountExistId)
     @Post()
     async create(@Body() setting: SettingDto, @Request() req): Promise<SettingEntity> {
         return await this.settingService.create(setting);
     }
 
     @UseGuards(AuthGuard('jwt'))
+    @UseGuards(DoesAccountExistId)
     @Put(':id')
     async update(@Param('id') id: number, @Body() setting: SettingDto, @Request() req): Promise<SettingEntity> {
         const { numberOfAffectedRows, updatedSetting } = await this.settingService.update(id, setting);

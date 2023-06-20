@@ -1,26 +1,55 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 import { AccountsService } from '../accounts/accounts.service';
 @Injectable()
 export class AuthService {
-    constructor(private readonly userService: AccountsService) { }
+    constructor(private readonly accountsService: AccountsService, private readonly jwtService: JwtService,) { }
 
     async validateAccount(email: string, pass: string) {
         // find if user exist with this email
-        const user = await this.userService.findOneByEmail(email);
-        if (!user) {
+        const account = await this.accountsService.findOneByEmail(email);
+        if (!account) {
             return null;
         }
 
         // find if user password match
-        const match = await this.comparePassword(pass, user.password);
+        const match = await this.comparePassword(pass, account.password);
         if (!match) {
             return null;
         }
 
         // tslint:disable-next-line: no-string-literal
-        const { password, ...result } = user['dataValues'];
+        const { password, ...result } = account['dataValues'];
         return result;
+    }
+
+    public async login(account) {
+        const token = await this.generateToken(account);
+        return { account, token };
+    }
+
+    public async create(account) {
+        const pass = await this.hashPassword(account.password);
+        const newAccount = await this.accountsService.create({ ...account, password: pass });
+
+        // tslint:disable-next-line: no-string-literal
+        const { password, ...result } = newAccount['dataValues'];
+
+        // generate token
+        const token = await this.generateToken(result);
+
+        return { account: result, token };
+    }
+
+    private async generateToken(account) {
+        const token = await this.jwtService.signAsync(account);
+        return token;
+    }
+
+    private async hashPassword(password) {
+        const hash = await bcrypt.hash(password, 10);
+        return hash;
     }
 
     private async comparePassword(enteredPassword, dbPassword) {

@@ -6,17 +6,21 @@ import { ACCOUNT_REPOSITORY } from '../../core/constants';
 @Injectable()
 export class AccountsService {
 
-    constructor(@Inject(ACCOUNT_REPOSITORY) private readonly userRepository: typeof Account) { }
+    constructor(@Inject(ACCOUNT_REPOSITORY) private readonly accountRepository: typeof Account) { }
 
     async create(account: AccountDto): Promise<Account> {
-        return await this.userRepository.create<Account>(account);
+        return await this.accountRepository.create<Account>(account);
     }
 
     async findOneByName(name: string): Promise<Account> {
-        return await this.userRepository.findOne<Account>({ where: { name } });
+        return await this.accountRepository.findOne<Account>({ where: { name } });
+    }
+
+    async findOneByEmail(email: string): Promise<Account> {
+        return await this.accountRepository.findOne<Account>({ where: { email } });
     }
 
     async findOneById(id: number): Promise<Account> {
-        return await this.userRepository.findOne<Account>({ where: { id } });
+        return await this.accountRepository.findOne<Account>({ where: { id } });
     }
 }

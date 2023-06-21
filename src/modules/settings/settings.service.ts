@@ -18,18 +18,18 @@ export class SettingsService {
     	});
     }
 
-    async findOne(id): Promise<Setting> {
+    async findOne(id: number): Promise<Setting> {
         return await this.settingRepository.findOne({
         	where: { id },
         	include: [{ model: Account, attributes: { exclude: ['password'] } }],
     	});
     }
 
-    async delete(id) {
+    async delete(id: number) {
         return await this.settingRepository.destroy({ where: { id } });
     }
 
-    async update(id, data) {
+    async update(id: number, data: SettingDto) {
         const [numberOfAffectedRows, [updatedSetting]] = await this.settingRepository.update({ ...data }, { where: { id }, returning: true });
 
         return { numberOfAffectedRows, updatedSetting };

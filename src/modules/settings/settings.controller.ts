@@ -11,7 +11,7 @@ export class SettingsController {
 
     @Get()
     async findAll() {
-        return await this.settingService.findAll()
+        return this.settingService.findAll()
     }
 
     @Get(':id')
@@ -30,7 +30,7 @@ export class SettingsController {
     @UsePipes(ValidateValueDataTypePipe)
     @Post()
     async create(@Body() setting: SettingDto, @Request() req): Promise<SettingEntity> {
-        return await this.settingService.create(setting);
+        return this.settingService.create(setting);
     }
 
     @UseGuards(AuthGuard('jwt'))

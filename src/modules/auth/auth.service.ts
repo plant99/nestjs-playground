@@ -14,7 +14,7 @@ export class AuthService {
         }
 
         // find if user password match
-        const match = await this.comparePassword(pass, account.password);
+        const match = await account.comparePassword(pass);
         if (!match) {
             return null;
         }
@@ -30,11 +30,10 @@ export class AuthService {
     }
 
     public async create(account) {
-        const pass = await this.hashPassword(account.password);
-        const newAccount = await this.accountsService.create({ ...account, password: pass });
+        const newAccount = await this.accountsService.create(account);
 
         // tslint:disable-next-line: no-string-literal
-        const { password, ...result } = newAccount['dataValues'];
+        const { password, ...result } = newAccount.get({plain: true});
 
         // generate token
         const token = await this.generateToken(result);

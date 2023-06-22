@@ -10,11 +10,11 @@ export class AuthController {
     @UseGuards(AuthGuard('local'))
     @Post('login')
     async login(@Request() req) {
-        return await this.authService.login(req.user);
+        return this.authService.login(req.user);
     }
     @UseGuards(DoesAccountExistEmail)
     @Post('signup')
     async signUp(@Body() account: AccountDto) {
-        return await this.authService.create(account);
+        return this.authService.create(account);
     }
 }

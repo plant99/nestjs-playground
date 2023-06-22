@@ -9,11 +9,11 @@ export class SettingsService {
     constructor(@Inject(SETTING_REPOSITORY) private readonly settingRepository: typeof Setting) {}
 
     async create(setting: SettingDto): Promise<Setting> {
-        return await this.settingRepository.create<Setting>({...setting})
+        return this.settingRepository.create<Setting>({...setting})
     }
 
     async findAll(accountId: number): Promise<Setting[]> {
-        return await this.settingRepository.findAll<Setting>({
+        return this.settingRepository.findAll<Setting>({
             include: [{ model: Account}],
             where: {
                 accountId,

@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsEnum } from 'class-validator';
-enum Types {
+enum SettingDataType {
     STRING = 'string',
     NUMBER = 'number',
     BOOLEAN = 'boolean'
@@ -12,10 +12,10 @@ export class SettingDto {
     readonly value: string;
 
     @IsNotEmpty()
-    @IsEnum(Types, {
+    @IsEnum(SettingDataType, {
         message: 'dataType must be one of "string", "number" or "boolean"',
     })
-    readonly dataType: string;
+    readonly dataType: SettingDataType;
 
     @IsNotEmpty()
     readonly accountId: number;

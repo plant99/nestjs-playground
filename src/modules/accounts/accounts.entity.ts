@@ -1,8 +1,12 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, Scopes } from 'sequelize-typescript';
 import * as bcrypt from 'bcrypt';
 
+@Scopes(() => ({
+    withoutPassword: {
+        attributes: { exclude: ['password'] }
+    }
+}))
 @Table
-
 export class Account extends Model<Account> {
     @Column({
         type: DataType.STRING,

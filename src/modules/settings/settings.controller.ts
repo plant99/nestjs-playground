@@ -10,11 +10,13 @@ export class SettingsController {
     constructor(private readonly settingService: SettingsService) {}
 
     @Get()
+    @UseGuards(AuthGuard('jwt'))
     async findAll() {
         return this.settingService.findAll()
     }
 
     @Get(':id')
+    @UseGuards(AuthGuard('jwt'))
     async findOne(@Param('id') id: number): Promise<SettingEntity> {
         const setting = await this.settingService.findOne(id);
 

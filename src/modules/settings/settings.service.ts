@@ -14,15 +14,15 @@ export class SettingsService {
 
     async findAll(): Promise<Setting[]> {
         return await this.settingRepository.findAll<Setting>({
-        	include: [{ model: Account, attributes: { exclude: ['password'] } }],
-    	});
+            include: [{ model: Account}],
+        });
     }
 
     async findOne(id: number): Promise<Setting> {
         return await this.settingRepository.findOne({
-        	where: { id },
-        	include: [{ model: Account, attributes: { exclude: ['password'] } }],
-    	});
+            where: { id },
+            include: [{ model: Account}],
+        });
     }
 
     async delete(id: number) {

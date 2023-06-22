@@ -12,34 +12,34 @@ export class SettingsController {
 
     @Get()
     @UseGuards(AuthGuard('jwt'))
-    async findAll() {
-        return this.settingService.findAll()
+    async findAll(@Request() req) {
+        return this.settingService.findAll(req.user.id)
     }
 
     @Get(':id')
     @UseGuards(AuthGuard('jwt'))
-    async findOne(@Param('id') id: number): Promise<SettingEntity> {
-        return this.settingService.findOne(id);
+    async findOne(@Param('id') id: number, @Request() req): Promise<SettingEntity> {
+        return this.settingService.findOne(id, req.user.id);
     }
 
     @UseGuards(AuthGuard('jwt'), DoesAccountExistId, IsValidAccountIDForRequest)
     @UsePipes(ValidateValueDataTypePipe)
     @Post()
-    async create(@Body() setting: SettingDto, @Request() req): Promise<SettingEntity> {
+    async create(@Body() setting: SettingDto): Promise<SettingEntity> {
         return this.settingService.create(setting);
     }
 
     @UseGuards(AuthGuard('jwt'), DoesAccountExistId, IsValidAccountIDForRequest)
     @UsePipes(ValidateValueDataTypePipe)
     @Put(':id')
-    async update(@Param('id') id: number, @Body() setting: SettingDto, @Request() req): Promise<SettingEntity> {
+    async update(@Param('id') id: number, @Body() setting: SettingDto): Promise<SettingEntity> {
         return this.settingService.update(id, setting);
 
     }
 
     @UseGuards(AuthGuard('jwt'))
     @Delete(':id')
-    async remove(@Param('id') id: number, @Request() req) {
+    async remove(@Param('id') id: number) {
         return this.settingService.delete(id);
     }
 }

@@ -12,15 +12,18 @@ export class SettingsService {
         return await this.settingRepository.create<Setting>({...setting})
     }
 
-    async findAll(): Promise<Setting[]> {
+    async findAll(accountId: number): Promise<Setting[]> {
         return await this.settingRepository.findAll<Setting>({
             include: [{ model: Account}],
+            where: {
+                accountId,
+            }
         });
     }
 
-    async findOne(id: number): Promise<Setting> {
+    async findOne(id: number, accountId: number): Promise<Setting> {
         const setting = await this.settingRepository.findOne({
-            where: { id },
+            where: { id, accountId },
             include: [{ model: Account}],
         });
         if (!setting) {

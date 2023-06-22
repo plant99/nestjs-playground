@@ -1,5 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Param, Body, NotFoundException, UseGuards, Request, UsePipes  } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { IsValidAccountIDForRequest } from 'src/core/guards/isValidAccountIdForRequest';
 import { SettingsService } from './settings.service';
 import { Setting as SettingEntity } from './settings.entity';
 import { SettingDto } from './dto/setting.dto';
@@ -21,16 +22,14 @@ export class SettingsController {
         return this.settingService.findOne(id);
     }
 
-    @UseGuards(AuthGuard('jwt'))
-    @UseGuards(DoesAccountExistId)
+    @UseGuards(AuthGuard('jwt'), DoesAccountExistId, IsValidAccountIDForRequest)
     @UsePipes(ValidateValueDataTypePipe)
     @Post()
     async create(@Body() setting: SettingDto, @Request() req): Promise<SettingEntity> {
         return this.settingService.create(setting);
     }
 
-    @UseGuards(AuthGuard('jwt'))
-    @UseGuards(DoesAccountExistId)
+    @UseGuards(AuthGuard('jwt'), DoesAccountExistId, IsValidAccountIDForRequest)
     @UsePipes(ValidateValueDataTypePipe)
     @Put(':id')
     async update(@Param('id') id: number, @Body() setting: SettingDto, @Request() req): Promise<SettingEntity> {

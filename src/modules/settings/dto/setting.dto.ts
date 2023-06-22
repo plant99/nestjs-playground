@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsEnum } from 'class-validator';
+import { IsNotEmpty, IsEnum, IsNumber } from 'class-validator';
 enum SettingDataType {
     STRING = 'string',
     NUMBER = 'number',
@@ -18,5 +18,6 @@ export class SettingDto {
     readonly dataType: SettingDataType;
 
     @IsNotEmpty()
+    @IsNumber()
     readonly accountId: number;
 }

@@ -18,13 +18,7 @@ export class SettingsController {
     @Get(':id')
     @UseGuards(AuthGuard('jwt'))
     async findOne(@Param('id') id: number): Promise<SettingEntity> {
-        const setting = await this.settingService.findOne(id);
-
-        if (!setting) {
-            throw new NotFoundException('This Setting doesn\'t exist');
-        }
-
-        return setting;
+        return this.settingService.findOne(id);
     }
 
     @UseGuards(AuthGuard('jwt'))
@@ -40,24 +34,13 @@ export class SettingsController {
     @UsePipes(ValidateValueDataTypePipe)
     @Put(':id')
     async update(@Param('id') id: number, @Body() setting: SettingDto, @Request() req): Promise<SettingEntity> {
-        const { numberOfAffectedRows, updatedSetting } = await this.settingService.update(id, setting);
+        return this.settingService.update(id, setting);
 
-        if (numberOfAffectedRows === 0) {
-            throw new NotFoundException('This Setting doesn\'t exist');
-        }
-        return updatedSetting;
     }
 
     @UseGuards(AuthGuard('jwt'))
     @Delete(':id')
     async remove(@Param('id') id: number, @Request() req) {
-        const deleted = await this.settingService.delete(id);
-
-        if (deleted === 0) {
-            throw new NotFoundException('This Setting doesn\'t exist');
-        }
-
-        // return success message
-        return 'Successfully deleted';
+        return this.settingService.delete(id);
     }
 }

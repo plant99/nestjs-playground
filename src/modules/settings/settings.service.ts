@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { SETTING_REPOSITORY } from 'src/core/constants';
 import { Setting } from './settings.entity';
 import { SettingDto } from './dto/setting.dto';
@@ -19,19 +19,34 @@ export class SettingsService {
     }
 
     async findOne(id: number): Promise<Setting> {
-        return await this.settingRepository.findOne({
+        const setting = await this.settingRepository.findOne({
             where: { id },
             include: [{ model: Account}],
         });
+        if (!setting) {
+            throw new NotFoundException('This Setting doesn\'t exist');
+        }
+
+        return setting;
     }
 
     async delete(id: number) {
-        return await this.settingRepository.destroy({ where: { id } });
+        const deleted = await this.settingRepository.destroy({ where: { id } });
+
+        if (deleted === 0) {
+            throw new NotFoundException('This Setting doesn\'t exist');
+        }
+
+        // return success message
+        return 'Successfully deleted';
     }
 
     async update(id: number, data: SettingDto) {
         const [numberOfAffectedRows, [updatedSetting]] = await this.settingRepository.update({ ...data }, { where: { id }, returning: true });
 
-        return { numberOfAffectedRows, updatedSetting };
+        if (numberOfAffectedRows === 0) {
+            throw new NotFoundException('This Setting doesn\'t exist');
+        }
+        return updatedSetting;
     }
 }

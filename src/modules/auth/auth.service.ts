@@ -21,7 +21,7 @@ export class AuthService {
         }
 
         // tslint:disable-next-line: no-string-literal
-        const { password, ...result } = account['dataValues'];
+        const { password, ...result } = account.get({plain: true});
         return result;
     }
 

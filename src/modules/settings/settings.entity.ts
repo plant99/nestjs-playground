@@ -34,5 +34,15 @@ export class Setting extends Model<Setting> {
     @Column({
         type: DataType.DATE
     })
+    createdAt: Date;
+
+    @Column({
+        type: DataType.DATE
+    })
+    updatedAt: Date;
+
+    @Column({
+        type: DataType.DATE
+    })
     deletedAt: Date;
 }

@@ -13,6 +13,16 @@ export class Account extends Model<Account> {
     @Column({
         type: DataType.DATE
     })
+    createdAt: Date;
+
+    @Column({
+        type: DataType.DATE
+    })
+    updatedAt: Date;
+
+    @Column({
+        type: DataType.DATE
+    })
     deletedAt: Date;
 
     @Column({

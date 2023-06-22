@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { AccountsService } from '../accounts/accounts.service';
+import { AccountDto } from '../accounts/dto/accounts.dto';
 @Injectable()
 export class AuthService {
     constructor(private readonly accountsService: AccountsService, private readonly jwtService: JwtService,) { }
@@ -24,16 +25,16 @@ export class AuthService {
         return result;
     }
 
-    public async login(account) {
+    public async login(account: AccountDto) {
         const token = await this.generateToken(account);
         return { account, token };
     }
 
-    public async create(account) {
+    public async create(account: AccountDto) {
         const newAccount = await this.accountsService.create(account);
 
         // tslint:disable-next-line: no-string-literal
-        const { password, ...result } = newAccount.get({plain: true});
+        const result = newAccount.get({plain: true});
 
         // generate token
         const token = await this.generateToken(result);
@@ -41,18 +42,8 @@ export class AuthService {
         return { account: result, token };
     }
 
-    private async generateToken(account) {
+    private async generateToken(account: AccountDto) {
         const token = await this.jwtService.signAsync(account);
         return token;
-    }
-
-    private async hashPassword(password) {
-        const hash = await bcrypt.hash(password, 10);
-        return hash;
-    }
-
-    private async comparePassword(enteredPassword, dbPassword) {
-        const match = await bcrypt.compare(enteredPassword, dbPassword);
-        return match;
     }
 }
